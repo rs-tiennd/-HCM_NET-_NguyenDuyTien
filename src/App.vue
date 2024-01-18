@@ -1,28 +1,25 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import Nav from './components/Nav.vue'
+import { usePersistCart } from './utils/usePersistCart'
+import { useCartStore } from './stores/cart'
 import { useProductStore } from './stores/products'
 
 const productStore = useProductStore()
+const cartStore = useCartStore()
 
 productStore.fetchAll()
+usePersistCart()
 
+const count = computed(() => cartStore.count)
 </script>
 
-<template>  
-  <div class="drawer">  
-    <input id="drawer-input" type="checkbox" class="drawer-toggle">  
-    <div class="bg-base-100 text-base-content min-h-screen drawer-content">  
-      <router-view />  
-    </div>  
-    <div class="drawer-side">  
-      <label for="drawer-input" class="drawer-overlay"></label>
-      <ul class="p-4 overflow-y-auto menu w-80 bg-base-100 text-base-content">  
-        <li>  
-          <router-link to="/">  
-            Home  
-          </router-link>  
-        </li>  
-      </ul>  
-    </div>  
-  </div>  
-</template> 
+<template>
+  <div class="drawer">
+    <div class="bg-base-100 text-base-content min-h-screen drawer-content">
+      <Nav />
+      <router-view />
+    </div>
+
+  </div>
+</template>

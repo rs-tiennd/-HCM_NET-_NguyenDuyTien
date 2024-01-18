@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navbar {  
+    display: flex;  
+    align-items: center;  
+    padding: var(--navbar-padding, 0.5rem);  
+    min-height: 4rem;  
+    width: 100%;  
+} 
+
+.rounded-btn {
+    border-radius: var(--rounded-btn, 0.5rem);
+}
+.btn-sm {
+    height: 2rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    min-height: 2rem;
+    font-size: 0.875rem;
+}
+.btn-ghost {
+    border-width: 1px;
+    border-color: transparent;
+    background-color: transparent;
+    color: currentColor;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    outline-color: currentColor;
+}
+.card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem;
+}

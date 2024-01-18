@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Product } from '@/stores/products'
 import { toCurrency } from '@/utils/formatNumber'
-
+import { useCartStore } from '@/stores/cart'
 defineProps<{
   product: Product
 }>()
-
+const cartStore = useCartStore()
 
 </script>
 
@@ -25,10 +25,9 @@ defineProps<{
         </router-link>
       </h2>
       <p>{{ toCurrency(product.price) }}</p>
-      <div class="justify-end card-actions">
-        
-          Add to Cart
-      </div>
     </div>
+    <button class="btn btn-primary" @click="cartStore.add(product.id)">
+          Add to Cart
+    </button>
   </div>
 </template>

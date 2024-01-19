@@ -1,19 +1,31 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-
+import { ref } from 'vue'; 
 import { useCartStore } from '@/stores/cart'
 import { useProductStore } from '@/stores/products'
 import type { Product } from '@/stores/products'
 import { toCurrency } from '@/utils/formatNumber'
-
+import ConfirmationModal from '@/components/ConfirmationModal.vue';  
 import CartCardSkeleton from '@/components/CartCardSkeleton.vue'
 
 const cartStore = useCartStore()
 const productStore = useProductStore()
-
+const promptDeleteProduct = () => {  
+  showDeleteModal.value = true;  
+};  
+  
+const deleteProduct = async () => {  
+  if (product.value) {  
+    await productStore.deleteProduct(product.value.id);  
+  }  
+};  
+  
+const handleModalClose = () => {  
+  showDeleteModal.value = false;  
+}; 
 const route = useRoute()
-
+const showDeleteModal = ref(false); 
 const product = computed<Product>(
   () => productStore.items[route.params.productId as string],
 )
@@ -42,8 +54,23 @@ const product = computed<Product>(
           <button class="btn btn-primary" @click="cartStore.add(product.id)">
             Add to Cart
           </button>
+          <button class="btn btn-primary" @click="promptDeleteProduct">  
+            Delete product  
+          </button>  
+          <router-link class="link link-hover" :to="`/editProduct/${product.id}`">
+            <button class="btn btn-primary" @click="">
+            Edit product
+          </button>
+        </router-link>
         </div>
       </div>
+      <ConfirmationModal  
+      :show-modal="showDeleteModal"  
+      title="Confirm Delete"  
+      message="Are you sure you want to delete this product?"  
+      @confirm="deleteProduct"  
+      @update:show="handleModalClose"  
+    />  
     </div>
     <div v-else>
       <h1 class="text-xl text-error">

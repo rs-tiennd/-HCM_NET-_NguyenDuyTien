@@ -56,8 +56,70 @@ export const useProductStore = defineStore({
     },
 
     setSortOrder(order: string) {  
-      this.sortOrder = order // Update the sort order  
-      // NOTE: The list getter will reactively update the sorted list  
+      this.sortOrder = order
+    },
+
+    async addProduct(productType: any) {  
+      try {  
+        const res = await fetch(`${fakeStoreUrl}/products`, {  
+          method: 'POST',  
+          headers: {  
+            'Content-Type': 'application/json',  
+          },  
+          body: JSON.stringify(productType), 
+        });  
+    
+        if (!res.ok) throw new Error('Error adding product');  
+    
+        const newProduct = await res.json();  
+   
+
+        this.ids.push(newProduct.id);  
+        this.items[newProduct.id] = newProduct;  
+  
+   
+      } catch (error) {  
+        console.error('Failed to add the product: ', error);  
+      }  
+    },  
+
+    async updateProduct(product: Product) {  
+      try {  
+        const res = await fetch(`${fakeStoreUrl}/products/${product.id}`, {  
+          method: "PUT",  
+          headers: {  
+            'Content-Type': 'application/json',  
+          },  
+          body: JSON.stringify(product),  
+        });  
+      
+        if (!res.ok) throw new Error('Error updating product');  
+      
+        const updatedProduct: Product = await res.json();  
+    
+        if (this.ids.includes(updatedProduct.id)) {  
+          this.items[updatedProduct.id] = updatedProduct;  
+        }  
+      } catch (error) {  
+        console.error('Failed to update the product: ', error);  
+      }  
+    }, 
+
+    async deleteProduct(productId: number) {  
+      try {  
+        const res = await fetch(`${fakeStoreUrl}/products/${productId}`, {  
+          method: "DELETE",  
+        });  
+      
+        if (!res.ok) throw new Error('Error deleting product');  
+    
+        if (this.ids.includes(productId)) {  
+          delete this.items[productId];  
+          this.ids = this.ids.filter(id => id !== productId);  
+        }  
+      } catch (error) {  
+        console.error('Failed to delete the product: ', error);  
+      }  
     },  
   },
 })

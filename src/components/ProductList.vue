@@ -6,8 +6,7 @@ import { useProductStore } from '@/stores/products'
 import Sort from '@/components/Sort.vue'
 
 const productStore = useProductStore()  
-  
-const products = computed(() => productStore.list)  
+
 const loaded = computed(() => productStore.loaded)  
 const sortOrder = ref('') 
 
@@ -29,11 +28,11 @@ const sortedProducts = computed(() => {
 function handleSortChange(order: string) {  
   sortOrder.value = order  
 }  
+
 </script>  
   
 <template>    
   <Sort @sort-changed="handleSortChange" class="w-25" />  
-
   <div class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">  
     <ProductCardSkeleton  
       v-for="n in 15"  

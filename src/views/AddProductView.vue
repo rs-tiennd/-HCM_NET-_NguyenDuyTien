@@ -2,9 +2,6 @@
   import { ref } from 'vue';  
   import { useProductStore } from '@/stores/products'; // Adjust this path as needed  
   import ProductAdd from '@/components/ProductAdd.vue';
-  import { useRoute } from 'vue-router'
-  
-  const route = useRoute()
 
   const productStore = useProductStore();  
     
@@ -28,7 +25,6 @@
       };  
       // Notify user of success  
       alert('Product added successfully!');  
-      route.push('/');
     } catch (error) {  
       // Notify user of failure  
       alert(`Failed to add product`);  

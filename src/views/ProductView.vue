@@ -58,7 +58,7 @@ const product = computed<Product>(
             Delete product  
           </button>  
           <router-link class="link link-hover" :to="`/editProduct/${product.id}`">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" @click="">
             Edit product
           </button>
         </router-link>

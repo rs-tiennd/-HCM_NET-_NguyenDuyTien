@@ -1,11 +1,11 @@
 <script setup lang="ts">  
 import { useProductStore } from '@/stores/products';
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import type { Product } from '@/stores/products'
 import ConfirmationModal from '@/components/ConfirmationModal.vue';
-import { ref } from 'vue';
-
+import { ref } from 'vue';  
+ 
 const showModal = ref(false);  
   
 const openModal = () => {  
@@ -14,7 +14,6 @@ const openModal = () => {
 const productStore = useProductStore()
 
 const route = useRoute()
-const router = useRouter();
 
 const product = computed<Product>(
   () => productStore.items[route.params.productId as string],
@@ -25,7 +24,6 @@ const localProduct = ref({ ...product.value } as Product);
 const handleModalClose = () => {  
   showModal.value = false;  
 }; 
-const productId = route.params.productId as string;  
 
 const updateProducts = async () => {  
   if (!product.value) {  
@@ -36,7 +34,6 @@ const updateProducts = async () => {
   // Call store action to update the product  
   await productStore.updateProduct(localProduct .value);
   showModal.value = false;
-  router.push('/product/' + productId); 
 
 };  
 </script>  

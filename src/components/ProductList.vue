@@ -41,7 +41,7 @@ function handleSortChange(order: string) {
     />  
     <ProductCard  
       v-for="product in sortedProducts"  
-      :key="product.id"  
+      :key="product.productId"  
       :product="product"  
     />  
   </div>  

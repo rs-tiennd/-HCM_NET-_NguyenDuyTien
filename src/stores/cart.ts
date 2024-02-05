@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { useProductStore } from './products'
-import { CART_STORAGE } from '@/utils/usePersistCart'
+import { CART_STORAGE } from '../utils/usePersistCart'
 
 export interface Purchase {
-  productId: number
+  productId: string
   quantity: number
 }
 
@@ -12,7 +12,7 @@ interface CartState {
 }
 
 export interface CartPreview {
-  id: number
+  id: string
   image: string
   title: string
   quantity: number
@@ -61,7 +61,7 @@ export const useCartStore = defineStore({
   },
 
   actions: {
-    add(productId: number) {
+    add(productId: string) {
       if (this.contents[productId]) {
         this.contents[productId].quantity += 1
       }
@@ -72,7 +72,7 @@ export const useCartStore = defineStore({
         }
       }
     },
-    remove(productId: number) {
+    remove(productId: string) {
       if (!this.contents[productId])
         return
 

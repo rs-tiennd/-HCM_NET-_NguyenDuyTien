@@ -1,9 +1,18 @@
 import { defineStore } from 'pinia'
+import {  
+  getFirestore,  
+  collection,  
+  getDocs,  
+  doc,  
+  addDoc,  
+  updateDoc,  
+  deleteDoc  
+} from 'firebase/firestore'; 
 
-const fakeStoreUrl = 'https://fakestoreapi.com'
+import { db } from '../firebase'; 
 
 export interface Product {
-  id: number
+  productId: string
   title: string
   price: number
   description: string
@@ -13,7 +22,7 @@ export interface Product {
 
 interface ProductState {
   items: Record<string, Product>
-  ids: number[]
+  ids: string[]
   sortOrder: string
 }
 
@@ -42,81 +51,57 @@ export const useProductStore = defineStore({
     },
   },
 
-  actions: {
-    async fetchAll() {
-      if (this.loaded)
-        return
-
-      const res = await fetch(`${fakeStoreUrl}/products`)
-      const data: Product[] = await res.json()
-      this.ids = data.map((product) => {
-        this.items[product.id] = product
-        return product.id
-      })
-    },
-
-    setSortOrder(order: string) {  
-      this.sortOrder = order
-    },
-
-    async addProduct(productType: any) {  
-      try {  
-        const res = await fetch(`${fakeStoreUrl}/products`, {  
-          method: 'POST',  
-          headers: {  
-            'Content-Type': 'application/json',  
-          },  
-          body: JSON.stringify(productType), 
-        });  
-    
-        if (!res.ok) throw new Error('Error adding product');  
-    
-        const newProduct = await res.json();  
-   
-
-        this.ids.push(newProduct.id);  
-        this.items[newProduct.id] = newProduct;  
+  actions: {  
+    async fetchAll() {  
+      if (this.loaded) return;  
   
-   
+      try {  
+        const querySnapshot = await getDocs(collection(db, 'Products'));  
+        querySnapshot.forEach((docSnapshot) => {  
+          const data = docSnapshot.data() as Omit<Product, 'productId'>;  
+          const product = {  
+            productId: docSnapshot.id,  
+            ...data,  
+          }; 
+          this.items[docSnapshot.id] = product;    
+          this.ids.push(docSnapshot.id);  
+        });  
+      } catch (error) {  
+        console.error('Failed to fetch products: ', error);  
+      }  
+    },setSortOrder(order: string) {  
+      this.sortOrder = order;  
+    },   
+    async addProduct(productData: Omit<Product, 'productId'>) {  
+      try {  
+        const docRef = await addDoc(collection(db, 'Products'), productData);  
+        const newProduct = {
+          productId: docRef.id,
+          ...productData
+        } as unknown as Product;  
+        this.ids.push(newProduct.productId);  
+        this.items[newProduct.productId] = newProduct;  
       } catch (error) {  
         console.error('Failed to add the product: ', error);  
       }  
     },  
-
     async updateProduct(product: Product) {  
       try {  
-        const res = await fetch(`${fakeStoreUrl}/products/${product.id}`, {  
-          method: "PUT",  
-          headers: {  
-            'Content-Type': 'application/json',  
-          },  
-          body: JSON.stringify(product),  
-        });  
-      
-        if (!res.ok) throw new Error('Error updating product');  
-      
-        const updatedProduct: Product = await res.json();  
-    
-        if (this.ids.includes(updatedProduct.id)) {  
-          this.items[updatedProduct.id] = updatedProduct;  
-        }  
+        const productRef = doc(db, 'Products', product.productId);  
+        await updateDoc(productRef, { ...product });   
+  
+        this.items[product.productId] = product;  
       } catch (error) {  
         console.error('Failed to update the product: ', error);  
       }  
-    }, 
-
-    async deleteProduct(productId: number) {  
+    },    
+    async deleteProduct(productId: string) {  
       try {  
-        const res = await fetch(`${fakeStoreUrl}/products/${productId}`, {  
-          method: "DELETE",  
-        });  
-      
-        if (!res.ok) throw new Error('Error deleting product');  
-    
-        if (this.ids.includes(productId)) {  
-          delete this.items[productId];  
-          this.ids = this.ids.filter(id => id !== productId);  
-        }  
+        const productRef = doc(db, 'Products', productId);  
+        await deleteDoc(productRef);  
+  
+        this.ids = this.ids.filter(id => id !== productId);  
+        delete this.items[productId];  
       } catch (error) {  
         console.error('Failed to delete the product: ', error);  
       }  

@@ -20,13 +20,13 @@ const cartStore = useCartStore()
     </figure>
     <div class="card-body">
       <h2 class="card-title">
-        <router-link class="link link-hover" :to="`/product/${product.id}`">
+        <router-link class="link link-hover" :to="`/product/${product.productId}`">
           {{ product.title }}
         </router-link>
       </h2>
       <p>{{ toCurrency(product.price) }}</p>
     </div>
-    <button class="btn btn-primary" @click="cartStore.add(product.id)">
+    <button class="btn btn-primary" @click="cartStore.add(product.productId)">
           Add to Cart
     </button>
   </div>

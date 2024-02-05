@@ -17,7 +17,7 @@ const promptDeleteProduct = () => {
   
 const deleteProduct = async () => {  
   if (product.value) {  
-    await productStore.deleteProduct(product.value.id);  
+    await productStore.deleteProduct(product.value.productId);  
   }  
 };  
   
@@ -51,13 +51,13 @@ const product = computed<Product>(
           {{ toCurrency(product.price) }}
         </p>
         <div class="card-actions">
-          <button class="btn btn-primary" @click="cartStore.add(product.id)">
+          <button class="btn btn-primary" @click="cartStore.add(product.productId)">
             Add to Cart
           </button>
           <button class="btn btn-primary" @click="promptDeleteProduct">  
             Delete product  
           </button>  
-          <router-link class="link link-hover" :to="`/editProduct/${product.id}`">
+          <router-link class="link link-hover" :to="`/editProduct/${product.productId}`">
             <button class="btn btn-primary" @click="">
             Edit product
           </button>

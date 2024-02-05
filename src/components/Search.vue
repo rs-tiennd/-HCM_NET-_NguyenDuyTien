@@ -16,7 +16,7 @@ const searchResults = computed(() => {
   })
 })
 
-function navigate(id: number) {
+function navigate(id: string) {
   input.value = ''
   router.push(`/product/${id}`)
 }
@@ -28,8 +28,8 @@ function navigate(id: number) {
       <input v-model="input" type="text" placeholder="Search..." class="input input-ghost" :disabled="!productStore.loaded">
     </div>
     <ul class="shadow menu dropdown-content bg-base-100 rounded-box w-64 text-base-content overflow-y-scroll" style="max-height: 50vh;">
-      <li v-for="product in searchResults" :key="product.id">
-        <a href="#" @click.prevent="navigate(product.id)" v-text="product.title" />
+      <li v-for="product in searchResults" :key="product.productId">
+        <a href="#" @click.prevent="navigate(product.productId)" v-text="product.title" />
       </li>
     </ul>
   </div>

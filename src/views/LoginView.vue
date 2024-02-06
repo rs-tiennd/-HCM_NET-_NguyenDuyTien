@@ -62,7 +62,12 @@
       <div v-if="errorMessage" class="alert alert-danger">  
         {{ errorMessage }}  
       </div>    
-      <button type="submit" class="btn btn-primary w-100">Login</button>    
+      <button type="submit" class="btn btn-primary w-100">Login</button>        
+      <router-link class="link link-hover" :to="`/SignUp`">
+            <button class="btn btn-info w-100 mt-2" @click="">
+              SignUp
+          </button>
+       </router-link>
     </form>    
   </div>    
 </template>  
